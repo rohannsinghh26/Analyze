@@ -9,28 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        pip install pandas ruff
+      - name: Install dependencies
+        run: |
+          pip install pandas ruff
 
-    - name: Run ruff
-      run: ruff check .
+      - name: Run ruff linter
+        run: |
+          ruff check .
       
-    - name: Run execute.py to generate result.json
-      run: python execute.py > result.json
+      - name: Run execute.py to generate result.json
+        run: |
+          python execute.py > result.json
 
-    - name: Upload artifact result.json
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: ./
+      - name: Upload result.json (for GitHub Pages)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
 
   deploy:
     needs: build
@@ -39,9 +41,6 @@ jobs:
       pages: write
       id-token: write
 
-    environment:
-      name: github-pages
-
     steps:
-    - name: Deploy GitHub Pages
-      uses: actions/deploy-pages@v2
+      - name: Deploy GitHub Pages
+        uses: actions/deploy-pages@v4
